@@ -86,13 +86,45 @@ public final class ControlsService extends BaseService {
      * Skip forward or backward by a period of time.
      * <p>
      * To skip backwards specify a negative delta.
+     * <p>
+     * Precise seeking is used.
      *
      * @param delta time period, in milliseconds
+     * @return <code>true</code> if successful; <code>false</code> otherwise
      */
-    public void skip(long delta) {
+    public boolean skip(long delta) {
+        return skip(delta, false);
+    }
+
+    /**
+     * Skip forward or backward by a change in position.
+     * <p>
+     * To skip backwards specify a negative delta.
+     * <p>
+     * Precise seeking is used.
+     *
+     * @param delta amount to skip
+     * @return <code>true</code> if successful; <code>false</code> otherwise
+     */
+    public boolean skipPosition(float delta) {
+        return skipPosition(delta, false);
+    }
+
+    /**
+     * Skip forward or backward by a period of time.
+     * <p>
+     * To skip backwards specify a negative delta.
+     *
+     * @param delta time period, in milliseconds
+     * @param fast <code>true</code> for fast seeking; <code>false</code> for precise seeking
+     * @return <code>true</code> if successful; <code>false</code> otherwise
+     */
+    public boolean skip(long delta, boolean fast) {
         long current = mediaPlayer.status().getTime();
         if (current != -1) {
-            setTime(current + delta);
+            return setTime(current + delta, fast);
+        } else {
+            return false;
         }
     }
 
@@ -102,12 +134,44 @@ public final class ControlsService extends BaseService {
      * To skip backwards specify a negative delta.
      *
      * @param delta amount to skip
+     * @param fast <code>true</code> for fast seeking; <code>false</code> for precise seeking
+     * @return <code>true</code> if successful; <code>false</code> otherwise
      */
-    public void skipPosition(float delta) {
+    public boolean skipPosition(float delta, boolean fast) {
         float current = mediaPlayer.status().getPosition();
         if (current != -1) {
-            setPosition(current + delta);
+            return setPosition(current + delta, fast);
+        } else {
+            return false;
         }
+    }
+
+    /**
+     * Jump to a specific moment.
+     * <p>
+     * If the requested time is less than zero, it is normalised to zero.
+     * <p>
+     * Precise seeking is used.
+     *
+     * @param time time since the beginning, in milliseconds
+     * @return <code>true</code> if successful; <code>false</code> otherwise
+     */
+    public boolean setTime(long time) {
+        return setTime(time, false);
+    }
+
+    /**
+     * Jump to a specific position.
+     * <p>
+     * If the requested position is less than zero, it is normalised to zero.
+     * <p>
+     * Precise seeking is used.
+     *
+     * @param position position value, a percentage (e.g. 0.15 is 15%)
+     * @return <code>true</code> if successful; <code>false</code> otherwise
+     */
+    public boolean setPosition(float position) {
+        return setPosition(position, false);
     }
 
     /**
@@ -116,9 +180,11 @@ public final class ControlsService extends BaseService {
      * If the requested time is less than zero, it is normalised to zero.
      *
      * @param time time since the beginning, in milliseconds
+     * @param fast <code>true</code> for fast seeking; <code>false</code> for precise seeking
+     * @return <code>true</code> if successful; <code>false</code> otherwise
      */
-    public void setTime(long time) {
-        libvlc.libvlc_media_player_set_time(mediaPlayerInstance, Math.max(time, 0));
+    public boolean setTime(long time, boolean fast) {
+        return libvlc.libvlc_media_player_set_time(mediaPlayerInstance, Math.max(time, 0), fast ? 1 : 0) == 0;
     }
 
     /**
@@ -127,9 +193,11 @@ public final class ControlsService extends BaseService {
      * If the requested position is less than zero, it is normalised to zero.
      *
      * @param position position value, a percentage (e.g. 0.15 is 15%)
+     * @param fast <code>true</code> for fast seeking; <code>false</code> for precise seeking
+     * @return <code>true</code> if successful; <code>false</code> otherwise
      */
-    public void setPosition(float position) {
-        libvlc.libvlc_media_player_set_position(mediaPlayerInstance, Math.max(position, 0));
+    public boolean setPosition(float position, boolean fast) {
+        return libvlc.libvlc_media_player_set_position(mediaPlayerInstance, Math.max(position, 0), fast ? 1 : 0) == 0;
     }
 
     /**

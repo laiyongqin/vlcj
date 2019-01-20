@@ -1158,8 +1158,10 @@ public interface LibVlc extends Library {
      *
      * @param p_mi the Media Player
      * @param i_time the movie time (in ms).
+     * @param b_fast prefer fast seeking or precise seeking
+     * @return 0 on success, -1 on error
      */
-    void libvlc_media_player_set_time(libvlc_media_player_t p_mi, long i_time);
+    int libvlc_media_player_set_time(libvlc_media_player_t p_mi, long i_time, int b_fast);
 
     /**
      * Get movie position.
@@ -1178,8 +1180,10 @@ public interface LibVlc extends Library {
      *
      * @param p_mi the Media Player
      * @param f_pos the position
+     * @param b_fast prefer fast seeking or precise seeking
+     * @return 0 on success, -1 on error
      */
-    void libvlc_media_player_set_position(libvlc_media_player_t p_mi, float f_pos);
+    int libvlc_media_player_set_position(libvlc_media_player_t p_mi, float f_pos, int b_fast);
 
     /**
      * Set movie chapter (if applicable).
