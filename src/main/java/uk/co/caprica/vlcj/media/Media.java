@@ -40,14 +40,15 @@ public final class Media {
     /**
      *
      */
-    private final EventService    eventService;
-    private final InfoService     infoService;
-    private final MetaService     metaService;
-    private final OptionsService  optionsService;
-    private final ParseService    parseService;
-    private final SlaveService    slaveService;
-    private final SubitemService  subitemService;
-    private final UserDataService userDataService;
+    private final EventService     eventService;
+    private final InfoService      infoService;
+    private final MetaService      metaService;
+    private final OptionsService   optionsService;
+    private final ParseService     parseService;
+    private final SlaveService     slaveService;
+    private final SubitemService   subitemService;
+    private final ThumbnailService thumbnailService;
+    private final UserDataService  userDataService;
 
     /**
      * Create a new media item.
@@ -64,14 +65,15 @@ public final class Media {
         this.libvlc        = libvlc;
         this.mediaInstance = media;
 
-        this.eventService    = new EventService   (this);
-        this.infoService     = new InfoService    (this);
-        this.metaService     = new MetaService    (this);
-        this.optionsService  = new OptionsService (this);
-        this.parseService    = new ParseService   (this);
-        this.slaveService    = new SlaveService   (this);
-        this.subitemService  = new SubitemService (this);
-        this.userDataService = new UserDataService(this);
+        this.eventService     = new EventService    (this);
+        this.infoService      = new InfoService     (this);
+        this.metaService      = new MetaService     (this);
+        this.optionsService   = new OptionsService  (this);
+        this.parseService     = new ParseService    (this);
+        this.slaveService     = new SlaveService    (this);
+        this.subitemService   = new SubitemService  (this);
+        this.thumbnailService = new ThumbnailService(this);
+        this.userDataService  = new UserDataService (this);
     }
 
     public EventService events() {
@@ -102,6 +104,10 @@ public final class Media {
         return subitemService;
     }
 
+    public ThumbnailService thumbnails() {
+        return thumbnailService;
+    }
+
     public UserDataService userData() {
         return userDataService;
     }
@@ -111,14 +117,15 @@ public final class Media {
     }
 
     public void release() {
-        eventService   .release();
-        infoService    .release();
-        optionsService .release();
-        parseService   .release();
-        metaService    .release();
-        slaveService   .release();
-        subitemService .release();
-        userDataService.release();
+        eventService    .release();
+        infoService     .release();
+        optionsService  .release();
+        parseService    .release();
+        metaService     .release();
+        slaveService    .release();
+        subitemService  .release();
+        thumbnailService.release();
+        userDataService .release();
 
         libvlc.libvlc_media_release(mediaInstance);
     }
